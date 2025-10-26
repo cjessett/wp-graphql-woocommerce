@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.21.3](https://github.com/wp-graphql/wp-graphql-woocommerce/tree/v0.21.3) (2025-03-01)
+
+[Full Changelog](https://github.com/wp-graphql/wp-graphql-woocommerce/compare/v0.21.2...v0.21.3)
+
+**New Features:**
+
+- add: GraphQL support for WooCommerce Composite Products
+
+**Fixed:**
+
+- fix: ensure Firebase JWT dependency loads in packaged releases
+
 ## [v0.21.2](https://github.com/wp-graphql/wp-graphql-woocommerce/tree/v0.21.2) (2025-03-01)
 
 [Full Changelog](https://github.com/wp-graphql/wp-graphql-woocommerce/compare/v0.21.1...v0.21.2)
