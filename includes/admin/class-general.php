@@ -95,13 +95,13 @@ class General extends Section {
 				'value'    => defined( 'NO_QL_SESSION_HANDLER' ) ? 'off' : woographql_setting( 'enable_ql_session_handler_on_rest', 'off' ),
 				'disabled' => defined( 'NO_QL_SESSION_HANDLER' ),
 			],
-			[
-				'name'    => 'enable_unsupported_product_type',
-				'label'   => __( 'Enable Unsupported types', 'wp-graphql-woocommerce' ),
-				'desc'    => __( 'Substitute unsupported product types with SimpleProduct', 'wp-graphql-woocommerce' ),
-				'type'    => 'checkbox',
-				'default' => 'off',
-			],
+                        [
+                                'name'    => 'enable_unsupported_product_type',
+                                'label'   => __( 'Enable Unsupported types', 'wp-graphql-woocommerce' ),
+                                'desc'    => __( 'Substitute unsupported product types with SimpleProduct', 'wp-graphql-woocommerce' ),
+                                'type'    => 'checkbox',
+                                'default' => 'off',
+                        ],
 			[
 				'name'              => 'enable_authorizing_url_fields',
 				'label'             => __( 'Enable User Session transferring URLs', 'wp-graphql-woocommerce' ),
