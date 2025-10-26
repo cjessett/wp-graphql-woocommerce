@@ -8,6 +8,8 @@
 
 namespace WPGraphQL\WooCommerce;
 
+use WPGraphQL\WooCommerce\Extension\Composite_Products;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -362,8 +364,8 @@ if ( ! class_exists( '\WPGraphQL\WooCommerce\WP_GraphQL_WooCommerce' ) ) :
 			require $include_directory_path . 'mutation/class-tax-rate-delete.php';
 			require $include_directory_path . 'mutation/class-tax-rate-update.php';
 
-			// Include connection class/function files.
-			require $include_directory_path . 'connection/wc-cpt-connection-args.php';
+                        // Include connection class/function files.
+                        require $include_directory_path . 'connection/wc-cpt-connection-args.php';
 			require $include_directory_path . 'connection/class-comments.php';
 			require $include_directory_path . 'connection/class-coupons.php';
 			require $include_directory_path . 'connection/class-customers.php';
@@ -378,7 +380,10 @@ if ( ! class_exists( '\WPGraphQL\WooCommerce\WP_GraphQL_WooCommerce' ) ) :
 			require $include_directory_path . 'connection/class-tax-rates.php';
 			require $include_directory_path . 'connection/class-wc-terms.php';
 
-			// Include admin files.
+                        // Include extension files.
+                        require $include_directory_path . 'extensions/class-composite-products.php';
+
+                        // Include admin files.
 			require $include_directory_path . 'admin/class-section.php';
 			require $include_directory_path . 'admin/class-general.php';
 
@@ -402,16 +407,26 @@ if ( ! class_exists( '\WPGraphQL\WooCommerce\WP_GraphQL_WooCommerce' ) ) :
 			 * The codeception tests are an example of an environment where adding the autoloader again causes issues
 			 * so this is set to false for tests.
 			 */
-			if ( defined( 'WPGRAPHQL_WOOCOMMERCE_AUTOLOAD' ) && true === WPGRAPHQL_WOOCOMMERCE_AUTOLOAD ) {
-				if ( file_exists( get_vendor_directory() . 'autoload.php' ) ) {
-					// Autoload Required Classes.
-					require_once get_vendor_directory() . 'autoload.php';
-				}
+                        if ( defined( 'WPGRAPHQL_WOOCOMMERCE_AUTOLOAD' ) && true === WPGRAPHQL_WOOCOMMERCE_AUTOLOAD ) {
+                                $autoload_paths = [
+                                        get_vendor_directory() . 'autoload.php',
+                                        get_vendor_prefixed_directory() . 'autoload.php',
+                                ];
 
-				/**
-				 * If GraphQL class doesn't exist, then dependencies cannot be
-				 * detected. This likely means the user cloned the repo from Github
-				 * but did not run `composer install`
+                                foreach ( $autoload_paths as $autoload_path ) {
+                                        if ( ! file_exists( $autoload_path ) ) {
+                                                continue;
+                                        }
+
+                                        // Autoload Required Classes.
+                                        require_once $autoload_path;
+                                        break;
+                                }
+
+                                /**
+                                 * If GraphQL class doesn't exist, then dependencies cannot be
+                                 * detected. This likely means the user cloned the repo from Github
+                                 * but did not run `composer install`
 				 */
 				if ( ! class_exists( 'WPGraphQL\WooCommerce\Vendor\Firebase\JWT\JWT' ) ) {
 					add_action(
@@ -492,10 +507,13 @@ if ( ! class_exists( '\WPGraphQL\WooCommerce\WP_GraphQL_WooCommerce' ) ) :
 			// Register WPGraphQL JWT Authentication filters.
 			JWT_Auth_Schema_Filters::add_filters();
 
-			// Initialize WPGraphQL for WooCommerce TypeRegistry.
-			$registry = new Type_Registry();
-			add_action( 'graphql_register_types', [ $registry, 'init' ] );
-		}
+                        // Initialize WPGraphQL for WooCommerce TypeRegistry.
+                        $registry = new Type_Registry();
+                        add_action( 'graphql_register_types', [ $registry, 'init' ] );
+
+                        // Initialize extensions.
+                        Composite_Products::init();
+                }
 	}
 
 endif;
